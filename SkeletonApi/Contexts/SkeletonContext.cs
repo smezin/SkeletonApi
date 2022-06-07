@@ -49,8 +49,8 @@ namespace SkeletonApi.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            DbSeeder.GetCategories().ForEach(c => modelBuilder.Entity<Category>().HasData(c));
-            DbSeeder.GetProducts().ForEach(p => modelBuilder.Entity<Product>().HasData(p));
+            SeedData.GetCategories().ForEach(c => modelBuilder.Entity<Category>().HasData(c));
+            SeedData.GetProducts().ForEach(p => modelBuilder.Entity<Product>().HasData(p));
         }
 
         public DbSet<Category> Categories { get; set; }

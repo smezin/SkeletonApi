@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SkeletonApi.Models.AppRequests;
+using SkeletonApi.Services.Interfaces;
+using System.Threading.Tasks;
 
 namespace SkeletonApi.Controllers
 {
@@ -11,6 +14,13 @@ namespace SkeletonApi.Controllers
     
     public class TestController : ControllerBase
     {
+        private readonly IUserService _userService;
+
+        public TestController(IUserService userService)
+        {
+            _userService = userService;
+        }
+
         /// <summary>
         /// get data without storing response
         /// </summary>
@@ -29,6 +39,12 @@ namespace SkeletonApi.Controllers
         public string GetDemo1()
         {
             return "testNoStore";
+        }
+        [HttpPost("register")]
+        public async Task<ActionResult> RegisterAsync(RegisterModel model)
+        {
+            var result = await _userService.RegisterAsync(model);
+            return Ok(result);
         }
 
     }

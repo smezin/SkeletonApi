@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SkeletonApi.Data
 {
-    public class DbSeeder 
+    public class SeedData 
     {
         
         public static List<Category> GetCategories()

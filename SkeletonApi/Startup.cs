@@ -1,25 +1,14 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
-using Newtonsoft;
-using Serilog;
+using SkeletonApi.Auth;
 using SkeletonApi.Configs;
 using SkeletonApi.Contexts;
 using SkeletonApi.Middleware;
-using Swashbuckle.Swagger;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SkeletonApi
 {
@@ -36,7 +25,12 @@ namespace SkeletonApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(Startup));
+            services.Configure<JWT>(Configuration.GetSection("JWT"));
+            AuthConfig.ConfigureService(services);
             services.AddDbContext<SkeletonContext>(opts => 
+                opts.UseSqlServer(Configuration["ConnectionString:SkeletonDb"])
+            );
+            services.AddDbContext<ApplicationDbContext>(opts =>
                 opts.UseSqlServer(Configuration["ConnectionString:SkeletonDb"])
             );
             SwaggerConfig.ConfigureService(services);
