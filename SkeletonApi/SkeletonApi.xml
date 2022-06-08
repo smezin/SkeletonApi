@@ -4,17 +4,6 @@
         <name>SkeletonApi</name>
     </assembly>
     <members>
-        <member name="T:SkeletonApi.Configs.SwaggerConfig">
-            <summary>
-            Class used to store SwashBuckle configs
-            </summary>
-        </member>
-        <member name="M:SkeletonApi.Configs.SwaggerConfig.ConfigureService(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
-            <summary>
-            Adding swagger service to startup services
-            </summary>
-            <param name="service">Startup IServiceCollection object</param>
-        </member>
         <member name="T:SkeletonApi.Controllers.TestController">
             <summary>
             Test global functionality 
@@ -37,6 +26,17 @@
             Middleware for caching (in memory) the responses for certain time.
             MUST be disabled for sensitive data responses
             </summary>
+        </member>
+        <member name="T:SkeletonApi.ServicesConfigs.SwaggerConfig">
+            <summary>
+            Class used to store SwashBuckle configs
+            </summary>
+        </member>
+        <member name="M:SkeletonApi.ServicesConfigs.SwaggerConfig.ConfigureService(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adding swagger service to startup services
+            </summary>
+            <param name="service">Startup IServiceCollection object</param>
         </member>
     </members>
 </doc>

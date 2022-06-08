@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SkeletonApi.Models.AppRequests;
 using SkeletonApi.Services.Interfaces;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace SkeletonApi.Controllers
@@ -15,10 +16,11 @@ namespace SkeletonApi.Controllers
     public class TestController : ControllerBase
     {
         private readonly IUserService _userService;
-
-        public TestController(IUserService userService)
+        private readonly IHttpClientFactory _httpClientFactory;
+        public TestController(IUserService userService, IHttpClientFactory httpClientFactory)
         {
             _userService = userService;
+            _httpClientFactory = httpClientFactory;
         }
 
         /// <summary>
@@ -45,6 +47,13 @@ namespace SkeletonApi.Controllers
         {
             var result = await _userService.RegisterAsync(model);
             return Ok(result);
+        }
+        [HttpGet, Route("cat")]
+        public async Task<ActionResult> GetCatFact()
+        {
+            var httpClient = _httpClientFactory.CreateClient("CatFact");
+            var response = await httpClient.GetStringAsync("fact");
+            return Ok(response);
         }
 
     }

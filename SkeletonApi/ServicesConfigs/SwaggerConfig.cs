@@ -2,7 +2,7 @@
 using Microsoft.OpenApi.Models;
 using System.IO;
 
-namespace SkeletonApi.Configs
+namespace SkeletonApi.ServicesConfigs
 {
     /// <summary>
     /// Class used to store SwashBuckle configs

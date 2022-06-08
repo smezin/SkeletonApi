@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace SkeletonApi.Configs
+namespace SkeletonApi.ServicesConfigs
 {
     public class MapperConfig
     {

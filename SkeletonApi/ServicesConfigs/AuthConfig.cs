@@ -11,7 +11,7 @@ using SkeletonApi.Services.Interfaces;
 using System;
 using System.Text;
 
-namespace SkeletonApi.Configs
+namespace SkeletonApi.ServicesConfigs
 {
     public class AuthConfig
     {

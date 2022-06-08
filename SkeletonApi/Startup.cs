@@ -5,8 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 using SkeletonApi.Auth;
-using SkeletonApi.Configs;
+using SkeletonApi.ServicesConfigs;
 using SkeletonApi.Contexts;
 using SkeletonApi.Middleware;
 
@@ -17,9 +18,11 @@ namespace SkeletonApi
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            StaticConfiguration = configuration;
         }
 
         public IConfiguration Configuration { get; }
+        public IConfiguration StaticConfiguration{get; private set;}
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -34,6 +37,7 @@ namespace SkeletonApi
                 opts.UseSqlServer(Configuration["ConnectionString:SkeletonDb"])
             );
             SwaggerConfig.ConfigureService(services);
+            services = HttpClientConfig.ConfigureService(services, Configuration);
             services.AddResponseCaching();
             IMapper mapper = MapperConfig.RegisterMaps().CreateMapper();
             services.AddSingleton(mapper);
@@ -57,9 +61,9 @@ namespace SkeletonApi
             app.UseRouting();
             app.UseResponseCaching();
             app.UseAuthorization();
-            app.UseMiddleware<CorrelationId>();
-            app.UseMiddleware<CacheResponses>();
-            app.UseMiddleware<ErrorHandler>();
+            //app.UseMiddleware<CorrelationId>();
+            //app.UseMiddleware<CacheResponses>();
+            //app.UseMiddleware<ErrorHandler>();
 
             app.UseEndpoints(endpoints =>
             {

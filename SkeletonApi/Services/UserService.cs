@@ -12,6 +12,7 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using SkeletonApi.Models.AppRequests;
+using Serilog;
 
 namespace SkeletonApi.Services
 {
@@ -20,24 +21,33 @@ namespace SkeletonApi.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly JWT _jwt;
-        public UserService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IOptions<JWT> jwt)
+        //private readonly ILogger _logger;
+        public UserService(
+            UserManager<ApplicationUser> userManager, 
+            RoleManager<IdentityRole> roleManager, 
+            IOptions<JWT> jwt
+            //ILogger logger
+            )
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _jwt = jwt.Value;
+            //_logger = logger;
         }
         public async Task<AuthenticationModel> GetTokenAsync(TokenRequestModel model)
         {
             var authenticationModel = new AuthenticationModel();
             var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null)
+            if (user is null)
             {
                 authenticationModel.IsAuthenticated = false;
                 authenticationModel.Message = $"No Accounts Registered with {model.Email}.";
+                //_logger.Information($"No Accounts Registered with {model.Email}.");
                 return authenticationModel;
             }
             if (await _userManager.CheckPasswordAsync(user, model.Password))
             {
+                //_logger.Information($"User with {model.Email} Authenticated");
                 authenticationModel.IsAuthenticated = true;
                 JwtSecurityToken jwtSecurityToken = await CreateJwtToken(user);
                 authenticationModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
@@ -48,6 +58,7 @@ namespace SkeletonApi.Services
                 return authenticationModel;
             }
             authenticationModel.IsAuthenticated = false;
+            //_logger.Information($"User with {model.Email} Unauthorized");
             authenticationModel.Message = $"Incorrect Credentials for user {user.Email}.";
             return authenticationModel;
         }
@@ -55,12 +66,11 @@ namespace SkeletonApi.Services
         {
             var userClaims = await _userManager.GetClaimsAsync(user);
             var roles = await _userManager.GetRolesAsync(user);
-
             var roleClaims = new List<Claim>();
 
-            for (int i = 0; i < roles.Count; i++)
+            foreach (var role in roles)
             {
-                roleClaims.Add(new Claim("roles", roles[i]));
+                roleClaims.Add(new Claim("roles", role));
             }
 
             var claims = new[]
@@ -101,15 +111,18 @@ namespace SkeletonApi.Services
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, Authorization.default_role.ToString());
-                    return $"User Registered with username {user.UserName}";
+                    //_logger.Information($"User Registered with username {user.UserName}");
+                    return $"User Registered with username {user.UserName} and rmail {user.Email}.";
                 }
                 else
                 {
+                    //_logger.Warning($"Failed creating user with username {user.UserName}");
                     return $"Unexpected error Registering username {user.UserName}";
                 }
             }
             else
             {
+                //_logger.Warning($"Email {user.Email } is already registered.");
                 return $"Email {user.Email } is already registered.";
             }
         }
