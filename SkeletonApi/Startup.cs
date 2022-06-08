@@ -56,6 +56,7 @@ namespace SkeletonApi
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseSerilogRequestLogging();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -66,9 +67,9 @@ namespace SkeletonApi
             app.UseRouting();
             app.UseResponseCaching();
             app.UseAuthorization();
-            //app.UseMiddleware<CorrelationId>();
-            //app.UseMiddleware<CacheResponses>();
-            //app.UseMiddleware<ErrorHandler>();
+            app.UseMiddleware<CorrelationId>();
+            app.UseMiddleware<CacheResponses>();
+            app.UseMiddleware<ErrorHandler>();
 
             app.UseEndpoints(endpoints =>
             {
