@@ -20,7 +20,7 @@ namespace SkeletonApi.Repositories
 
         public async Task<IEnumerable<Category>> GetCategories()
         {
-            return await _context.Categories.ToListAsync();
+            return await _context.Categories.Include("Products").ToListAsync();
         }
 
         public async Task<Category> GetCategory(int id)

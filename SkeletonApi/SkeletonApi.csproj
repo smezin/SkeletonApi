@@ -15,8 +15,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\Entities\AppUser.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Logs\" />
-    <Folder Include="Mapping\" />
   </ItemGroup>
 
   <ItemGroup>

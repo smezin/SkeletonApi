@@ -14,6 +14,7 @@ namespace SkeletonApi.Data
                 {
                     CategoryID = 1,
                     CategoryName = "Cars",
+                    Description = "4Wheels Rule!",
                     CreatedAt = System.DateTime.UtcNow
                 },
                 new Category

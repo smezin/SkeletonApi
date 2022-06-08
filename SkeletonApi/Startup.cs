@@ -10,6 +10,8 @@ using SkeletonApi.Auth;
 using SkeletonApi.ServicesConfigs;
 using SkeletonApi.Contexts;
 using SkeletonApi.Middleware;
+using SkeletonApi.Repositories.Interfaces;
+using SkeletonApi.Repositories;
 
 namespace SkeletonApi
 {
@@ -30,12 +32,15 @@ namespace SkeletonApi
             services.AddAutoMapper(typeof(Startup));
             services.Configure<JWT>(Configuration.GetSection("JWT"));
             AuthConfig.ConfigureService(services);
+            MapperConfig.RegisterMaps();
             services.AddDbContext<SkeletonContext>(opts => 
                 opts.UseSqlServer(Configuration["ConnectionString:SkeletonDb"])
             );
             services.AddDbContext<ApplicationDbContext>(opts =>
                 opts.UseSqlServer(Configuration["ConnectionString:SkeletonDb"])
             );
+            services.AddScoped<ICategoriesRepository, CategoriesRepository>();
+            services.AddScoped<IProductsRepository, ProductsRepository>();
             SwaggerConfig.ConfigureService(services);
             services = HttpClientConfig.ConfigureService(services, Configuration);
             services.AddResponseCaching();

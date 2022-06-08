@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using SkeletonApi.Mapping;
 
 namespace SkeletonApi.ServicesConfigs
 {
@@ -8,6 +9,7 @@ namespace SkeletonApi.ServicesConfigs
         {
             var MappingConfig = new MapperConfiguration(config =>
             {
+                config.AddProfile(new EntityiesProfile());
             });
             return MappingConfig;
         }
